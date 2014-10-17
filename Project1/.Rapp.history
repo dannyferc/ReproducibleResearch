@@ -1,0 +1,147 @@
+x <- 1
+x
+x <- 1:4
+x
+y <-2:3
+y
+x+y
+x <- c(3, 5, 1, 10, 12, 6)
+x
+[x > 0] <- 6
+x[x > 0] <- 6
+x
+x <- c(3, 5, 1, 10, 12, 6)
+x[x == 0] <- 6
+x
+x[x == 0]
+x
+x[x %in% 1:5] <- 0
+x
+x <- matrix(1:6,2,3)
+x
+x[2,]
+read.cvs
+read.csv
+getwd()
+install.packages("swirl")
+library(swirl)
+install_from_swirl("Getting and Cleaning Data")
+install_from_swirl("R Programming")
+library(swirl)
+swirl()
+submit()
+skip()
+q
+info()
+main()
+students4
+submit()
+passed
+failed
+mutate(status = "passed")
+mutate(passed, status = "passed")
+passed <- passed %>% mutate(status = "passed")
+failed <- failed %>% mutate(status = "failed")
+rbind_list(passed, failed)
+sat
+submit()
+stepsPerDay <- ddply(activity, ~date, summarise, steps = sum(steps))
+load(".RData")
+getwd()
+setwd("/Users/dfernandezcanon/Documents/Development/R/Project/ReproducibleResearch/Project1")
+opts_chunk$set(message = FALSE, fig.width = 6, fig.height = 6)
+require(plyr)#
+require(ggplot2)
+activity <- read.csv("activity.csv", header = TRUE)#
+activity <- transform(activity, date = as.Date(date))
+stepsPerDay <- ddply(activity, ~date, summarise, steps = sum(steps))
+p <- ggplot(stepsPerDay, aes(steps))#
+p <- p + geom_histogram(fill = "white", color = "black")#
+p <- p + ggtitle("Total number of steps per day")#
+p + xlab("Steps per day")
+p <- ggplot(stepsPerDay, aes(steps))#
+p <- p + geom_histogram(fill = "white", color = "black")#
+p <- p + ggtitle("Total number of steps per day")#
+p + xlab("Steps per day")
+p <- ggplot(stepsPerDay, aes(steps))#
+p <- p + geom_histogram(fill = "white", color = "black")#
+p <- p + ggtitle("Total number of steps per day")#
+p + xlab("Steps per day")
+str(stepsPerDay)
+meanStepsPerDay <- mean(stepsPerDay$steps, na.rm = TRUE)#
+medianStepsPerDay <- median(stepsPerDay$steps, na.rm = TRUE)
+meanStepsPerDay
+medianStepsPerDay
+avgStepsPerInterval <- ddply(activity,#
+                             ~interval, #
+                             summarise,#
+                             mean = mean(steps, na.rm = T))
+head(avgStepsPerInterval)
+p <- ggplot(avgStepsPerInterval, aes(interval, mean)) + geom_line()#
+p <- p + ggtitle("The average daily activity pattern")#
+p + xlab("Interval") + ylab("Number of steps")
+maxId <- which.max(avgStepsPerInterval$mean)#
+maxInterval <- avgStepsPerInterval$interval[maxId]
+maxId
+maxInterval
+numberRowNAs <- sum(apply(is.na(activity), 1, any))
+library(xtable)#
+#Set the output options for numbers#
+options(scipen = 9, digits = 3 )#
+print(xtable(summary(Data)), type="html")
+Data <- data
+library(xtable)#
+#Set the output options for numbers#
+options(scipen = 9, digits = 3 )#
+print(xtable(summary(Data)), type="html")
+attach(Data)
+str(data)
+str(Data)
+Data <- activity
+str(Data)
+attach(Data)
+library(xtable)#
+#Set the output options for numbers#
+options(scipen = 9, digits = 3 )#
+print(xtable(summary(Data)), type="html")
+library(plyr)#
+spd <- ddply(Data, .(date), summarize, steps = sum(steps))#
+mean.spd <- mean(spd$steps, na.rm = TRUE)#
+median.spd <- median(spd$steps, na.rm = TRUE)
+hist(spd$steps, xlab="Total number of steps per day", main=NULL, col="light blue")#
+abline(v=mean.spd, col = c("red"))#
+abline(v=median.spd, col = c("blue"), lty = 2)
+hist(spd$steps, xlab="Total number of steps per day", main=NULL, col="light blue", breaks = 50)
+spi <- ddply(Data, .(interval), summarize, steps = mean(steps, na.rm=TRUE))#
+max.spi <- max(spi$steps)#
+max.int <- spi[spi$steps==max(max.spi),1]
+plot(spi$interval,spi$steps, ylab="Average number of steps per interval",xlab="Interval", main=NULL, type="l", lwd=2, col="green")#
+abline(h=max.spi, col = c("red"))#
+abline(v=max.int, col = c("blue"))
+spi[which.max(spi$steps),]
+head(spi)
+head(data)
+head(Data)
+miss <- dim(Data[is.na(Data$steps),])[1]
+Data1 <- Data#
+#
+#Filling na values with total steps means (Not good enough)#
+# replace(Data1$steps, is.na(Data1$steps), mean(Data1$steps, na.rm=T))#
+#
+#Filling na values with interval's steps means (Much better) #
+row.names(spi)<- spi$interval#
+ind <- which(is.na(Data1$steps))#
+Data1[ind,1] <- spi[as.factor(Data1[ind,3]),2]#
+detach(Data)#
+attach(Data1)
+spd1 <- ddply(Data1, .(date), summarize, steps = sum(steps))#
+mean.spd1 <- mean(spd1$steps, na.rm = TRUE)#
+median.spd1 <- median(spd1$steps, na.rm = TRUE)
+mdays <- dim(spd[is.na(spd$steps),])[1]#
+mdays1 <- dim(spd1[is.na(spd1$steps),])[1]
+t1 <- merge(spd,spd1, by=1)#
+names(t1)<- c("Date","First estimate","Second estimate")#
+print(xtable(t1), type="html")
+hist(spd1$steps, xlab="Total number of steps per day", main=NULL, col="light blue")#
+abline(v=mean.spd1, col = c("red"))#
+abline(v=median.spd1, col = c("blue"), lty = 2)
